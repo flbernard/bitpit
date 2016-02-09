@@ -123,12 +123,12 @@ public:
 
 	void writeMesh();
 	void writeMesh(std::string name);
-	void writeField(std::string name, VTKLocation location, const std::vector<double> &values);
-	void writeField(std::string filename, std::string name, VTKLocation location, const std::vector<double> &values);
-	void writeCellField(std::string name, const std::vector<double> &values);
-	void writeCellField(std::string filename, std::string name, const std::vector<double> &values);
-	void writeVertexField(std::string name, const std::vector<double> &values);
-	void writeVertexField(std::string filename, std::string name, const std::vector<double> &values);
+	void writeField(std::string name, VTKLocation location, std::vector<double> &values);
+	void writeField(std::string filename, std::string name, VTKLocation location, std::vector<double> &values);
+	void writeCellField(std::string name, std::vector<double> &values);
+	void writeCellField(std::string filename, std::string name, std::vector<double> &values);
+	void writeVertexField(std::string name, std::vector<double> &values);
+	void writeVertexField(std::string filename, std::string name, std::vector<double> &values);
 
 	const VTKFieldMetaData getMetaData(std::string name);
 	void flushData(std::fstream &stream, VTKFormat format, std::string name);
@@ -177,10 +177,6 @@ private:
 
 	bool m_hasCustomTolerance;
 	double m_tolerance;
-
-	std::unordered_map<std::string, const std::vector<double> *> m_dataFields;
-	std::unordered_map<std::string, VTKLocation> m_dataLocations;
-	std::unordered_map<std::string, VTKFieldType> m_dataType;
 
 	void set_id(int id);
 	void setDimension(int dimension);
