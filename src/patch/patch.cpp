@@ -1294,8 +1294,7 @@ const VTKFieldMetaData Patch::getMetaData(std::string name)
 		return VTKFieldMetaData(connectSize, typeid(long));
 	}
 
-	// This code should never be reached
-	assert(false);
+
 }
 
 /*!
