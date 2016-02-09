@@ -25,8 +25,6 @@
 # CMake settings
 cmake_minimum_required(VERSION 2.8)
 
-# Features
-
 # Required libraries
 
 # Add library to targets
