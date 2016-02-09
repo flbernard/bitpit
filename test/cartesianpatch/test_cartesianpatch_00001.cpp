@@ -53,6 +53,25 @@ int main(int argc, char *argv[]) {
 	patch_2D->update();
 	patch_2D->writeMesh();
 
+
+	std::cout << std::endl;
+	std::cout << "\n  >> 2D data" << "\n";
+	std::cout << std::endl;
+
+	std::vector<double> cellData(patch_2D->getCellCount());
+	for (long i = 0; i < patch_2D->getCellCount(); ++i) {
+		cellData[i] = i;
+	}
+
+	patch_2D->writeField("index", "cell_data_2D", VTKLocation::CELL, cellData);
+
+	std::vector<double> vertexData(patch_2D->getVertexCount());
+	for (long i = 0; i < patch_2D->getVertexCount(); ++i) {
+		vertexData[i] = i;
+	}
+
+	patch_2D->writeField("index", "vertex_data_2D", VTKLocation::POINT, vertexData);
+
 	std::cout << std::endl;
 	std::cout << "\n  >> 2D bounding box" << "\n";
 	std::cout << std::endl;
