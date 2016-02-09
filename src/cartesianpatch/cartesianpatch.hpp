@@ -101,7 +101,7 @@ private:
 
 	double m_cellVolume;
 	std::array<double, 3> m_interfaceArea;
-	std::array<std::array<double, 3>, 3> m_normals;
+	std::array<std::array<double, 3>, 6> m_normals;
 
 	void initialize(const std::array<double, 3> &origin, const std::array<double, 3> &lengths,
 	                const std::array<int, 3> &nCells);
