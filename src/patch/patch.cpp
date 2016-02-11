@@ -25,6 +25,7 @@
 #include <sstream>
 #include <typeinfo>
 #include <unordered_map>
+#include <unordered_set>
 
 #include "patch.hpp"
 #include "utils.hpp"
@@ -746,6 +747,75 @@ bool Patch::deleteVertices(const std::vector<long> &ids)
 
 	return true;
 }
+
+/*!
+	Count isolated vertices in the mesh.
+
+	An isolated vertex is a vertex not linked by any cells.
+
+	\result The number of isolated vertices.
+*/
+long Patch::countIsolatedVertices()
+{
+	std::unordered_set<long> usedVertices;
+	for (const Cell &cell : m_cells) {
+		int nCellVertices = cell.getVertexCount();
+		for (int i = 0; i < nCellVertices; ++i) {
+			usedVertices.insert(cell.getVertex(i));
+		}
+	}
+
+	return (m_nVertices - usedVertices.size());
+}
+
+/*!
+	Find isolated vertices in the patch.
+
+	An isolated vertex is a vertex not linked by any cells.
+
+	\result The list of isolated vertice.
+*/
+std::vector<long> Patch::findIsolatedVertices()
+{
+	// Add all the vertices to the list
+	std::unordered_set<long> vertexSet;
+	for (const Vertex &vertex : m_vertices) {
+		vertexSet.insert(vertex.get_id());
+	}
+
+	// Remove used vertices
+	for (const Cell &cell : m_cells) {
+		int nCellVertices = cell.getVertexCount();
+		for (int i = 0; i < nCellVertices; ++i) {
+			vertexSet.erase(cell.getVertex(i));
+		}
+	}
+
+	// Build a list
+	std::vector<long> vertexList;
+	vertexList.reserve(vertexSet.size());
+	for (const long &id : vertexSet) {
+		vertexList.emplace_back();
+		long &lastId = vertexList.back();
+		lastId = id;
+	}
+
+	return vertexList;
+}
+
+/*!
+	Remove isolated vertices
+*/
+bool Patch::deleteIsolatedVertices()
+{
+	if (!isAdvancedEditable()) {
+		return false;
+	}
+
+	std::vector<long> list = findIsolatedVertices();
+	deleteVertices(list);
+
+	return true;
 }
 
 /*!
