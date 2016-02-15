@@ -147,6 +147,7 @@ public:
 	std::vector<long> findCellVertexNeighs(const long &id, bool complete = true) const;
 	std::vector<long> findCellVertexNeighs(const long &id, const int &vertex, const std::vector<long> &blackList = std::vector<long>()) const;
 	std::vector<long> findCellVertexNeighs(const long &id, const std::vector<int> &vertices, const std::vector<long> &blackList = std::vector<long>()) const;
+        void findFaceNeighCell(const long &cell_idx, const long &neigh_idx, int &face_loc_idx, int &intf_loc_idx);
 
 	CellIterator getCellIterator(const long &id);
 	CellIterator cellBegin();
