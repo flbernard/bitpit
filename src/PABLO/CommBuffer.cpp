@@ -84,12 +84,12 @@ CommBuffer::~CommBuffer() {
 CommBuffer& CommBuffer::operator =(const CommBuffer& rhs) {
 	if(this != &rhs)
 	{
-		char* new_array = new char[rhs.m_commBufferSize];
-		copy(rhs.m_commBuffer,rhs.m_commBuffer+rhs.m_commBufferSize,new_array);
-
 		delete [] m_commBuffer;
+		m_commBuffer = new char[rhs.m_commBufferSize];
 
-		m_commBuffer = new_array;
+		for (uint32_t i=0;i<m_commBufferSize;++i)
+			m_commBuffer[i] = rhs.m_commBuffer[i];
+
 		m_commBufferSize = rhs.m_commBufferSize;
 		m_pos = rhs.m_pos;
 		m_comm = rhs.m_comm;
