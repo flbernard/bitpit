@@ -52,21 +52,21 @@ int8_t Octant::sm_maxLevel;
 // CONSTRUCTORS AND OPERATORS
 // =================================================================================== //
 
-/*! Default constructor of an octant.
- * It builds a 2D zero-level octant with origin in (0,0,0).
- */
-Octant::Octant(){
-	m_dim = 2;
-	sm_maxLevel = 20;
-	m_x = m_y = m_z = 0;
-	m_level = 0;
-	m_marker = 0;
-	//default constructor of bitset is zero value -> set boundary condition true for faces
-	for (uint8_t i=0; i<4; i++){
-		m_info[i] = true;
-	}
-	m_info[14] = true;
-};
+///*! Default constructor of an octant.
+// * It builds a 2D zero-level octant with origin in (0,0,0).
+// */
+//Octant::Octant(){
+//	m_dim = 2;
+//	sm_maxLevel = 20;
+//	m_x = m_y = m_z = 0;
+//	m_level = 0;
+//	m_marker = 0;
+//	//default constructor of bitset is zero value -> set boundary condition true for faces
+//	for (uint8_t i=0; i<4; i++){
+//		m_info[i] = true;
+//	}
+//	m_info[14] = true;
+//};
 
 /*! Custom constructor of an octant.
  * It builds a 2D or 3D zero-level octant with origin in (0,0,0).
@@ -148,6 +148,7 @@ Octant::Octant(const Octant &octant){
 	m_level = octant.m_level;
 	m_marker = octant.m_marker;
 	m_info = octant.m_info;
+	sm_maxLevel = octant.sm_maxLevel;
 };
 
 /*! Check if two octants are equal (no check on info)
@@ -159,6 +160,7 @@ bool Octant::operator ==(const Octant & oct2){
 	check = check && (m_y == oct2.m_y);
 	check = check && (m_z == oct2.m_z);
 	check = check && (m_level == oct2.m_level);
+	check = check && (sm_maxLevel == oct2.sm_maxLevel);
 	return check;
 }
 
@@ -585,7 +587,7 @@ vector< Octant >	Octant::buildChildren(){
 	int nchildren = 1<<m_dim;
 
 	if (this->m_level < sm_maxLevel){
-		vector< Octant > children(nchildren);
+		vector< Octant > children(nchildren, Octant(m_dim, sm_maxLevel));
 		for (int i=0; i<nchildren; i++){
 			switch (i) {
 			case 0 :
@@ -724,7 +726,7 @@ vector< Octant >	Octant::buildChildren(){
 		return children;
 	}
 	else{
-		vector< Octant > children(0);
+		vector< Octant > children(0, Octant(m_dim, sm_maxLevel));
 		return children;
 	}
 };
