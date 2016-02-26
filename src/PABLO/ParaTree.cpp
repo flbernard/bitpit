@@ -126,7 +126,7 @@ ParaTree::ParaTree(u32vector2D & XYZ, u8vector & levels, uint8_t dim, int8_t max
 	 * \param[in] maxlevel Maximum allowed level of refinement for the octree. The default value is 20.
 	 * \param[in] logfile The file name for the log of this object. PABLO.log is the default value.
 	 */
-ParaTree::ParaTree(u32vector2D & XYZ, u8vector & levels, uint8_t dim, int8_t maxlevel, string logfile):m_dim(uint8_t(min(max(2,int(dim)),3))),m_octree(maxlevel,dim),m_log(logfile),m_trans(maxlevel,dim){
+ParaTree::ParaTree(u32vector2D & XYZ, u8vector & levels, uint8_t dim, int8_t maxlevel, string logfile):m_octree(maxlevel,dim),m_trans(maxlevel,dim),m_dim(uint8_t(min(max(2,int(dim)),3))),m_log(logfile){
 #endif
 	uint8_t lev, iface;
 	uint32_t x0, y0, z0;
@@ -1333,7 +1333,7 @@ ParaTree::getLocalMinSize(){
 double
 ParaTree::getLocalMaxSize(){
 	uint32_t nocts = getNumOctants();
-	double octSize;
+	double octSize = 0;
 	double size = 0;
 	for (uint32_t idx = 0; idx < nocts; idx++){
 		octSize = getSize(idx);
@@ -2176,7 +2176,7 @@ ParaTree::adapt(bool mapper_flag){
 bool
 ParaTree::adaptGlobalRefine(bool mapper_flag) {
 	//TODO recoding for adapting with abs(marker) > 1
-	bool globalDone = false, localDone = false;
+	bool localDone = false;
 	uint32_t nocts = m_octree.getNumOctants();
 	vector<Octant>::iterator iter, iterend = m_octree.m_octants.end();
 
@@ -2197,6 +2197,7 @@ ParaTree::adaptGlobalRefine(bool mapper_flag) {
 		}
 	}
 #if ENABLE_MPI==1
+	bool globalDone = false;
 	if(m_serial){
 #endif
 		m_log.writeLog("---------------------------------------------");
@@ -2269,7 +2270,7 @@ ParaTree::adaptGlobalRefine(bool mapper_flag) {
 bool
 ParaTree::adaptGlobalCoarse(bool mapper_flag) {
 	//TODO recoding for adapting with abs(marker) > 1
-	bool globalDone = false, localDone = false;
+	bool localDone = false;
 	uint32_t nocts = m_octree.getNumOctants();
 	vector<Octant>::iterator iter, iterend = m_octree.m_octants.end();
 
@@ -2290,6 +2291,7 @@ ParaTree::adaptGlobalCoarse(bool mapper_flag) {
 		}
 	}
 #if ENABLE_MPI==1
+	bool globalDone = false;
 	if(m_serial){
 #endif
 		m_log.writeLog("---------------------------------------------");
@@ -3101,7 +3103,7 @@ bool
 ParaTree::private_adapt_mapidx(bool mapflag) {
 	//TODO recoding for adapting with abs(marker) > 1
 
-	bool globalDone = false, localDone = false;
+	bool localDone = false;
 	uint32_t nocts = m_octree.getNumOctants();
 	vector<Octant >::iterator iter, iterend = m_octree.m_octants.end();
 
@@ -3121,6 +3123,7 @@ ParaTree::private_adapt_mapidx(bool mapflag) {
 	}
 
 #if ENABLE_MPI==1
+	bool globalDone = false;
 	if(m_serial){
 #endif
 		m_log.writeLog("---------------------------------------------");
@@ -3523,8 +3526,8 @@ ParaTree::computePartition(uint32_t* partition, uint8_t & level_, dvector* weigh
 	uint8_t* glbdimcomm = new uint8_t[m_nproc];
 	uint8_t* glbindcomm = new uint8_t[m_nproc];
 
-	uint32_t division_result = 0;
-	uint32_t remind = 0;
+//	uint32_t division_result = 0;
+//	uint32_t remind = 0;
 	uint32_t Dh = uint32_t(pow(double(2),double(m_global.m_maxLevel-level)));
 	uint32_t istart, nocts, rest, forw, backw;
 	uint32_t i = 0, iproc, j;
