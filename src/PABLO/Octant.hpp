@@ -30,6 +30,7 @@
 #include <vector>
 #include <bitset>
 #include <array>
+#include <cmath>
 
 namespace bitpit {
 
